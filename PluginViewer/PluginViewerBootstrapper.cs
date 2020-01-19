@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using Caliburn.Micro;
 using PluginViewer.ViewModels;
@@ -21,20 +22,28 @@ namespace PluginViewer
 
         protected override void Configure()
         {
-            container = new CompositionContainer(
-                new AggregateCatalog(
-                    AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>()
-                )
-            );
+            var executingAssembly = Assembly.GetExecutingAssembly();
+            var catalog = new AggregateCatalog();
+            catalog.Catalogs.Add(new AssemblyCatalog(executingAssembly));
+            var folder = System.IO.Path.GetDirectoryName(executingAssembly.Location);
+            catalog.Catalogs.Add(new DirectoryCatalog(folder));
+            container = new CompositionContainer(catalog);
+            container.ComposeParts(this);
+
+            //container = new CompositionContainer(new AggregateCatalog(bla));
+            //AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>()));
 
             var batch = new CompositionBatch();
-
             batch.AddExportedValue<IWindowManager>(new WindowManager());
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());
             batch.AddExportedValue(container);
-
             container.Compose(batch);
         }
+
+        //protected override IEnumerable<Assembly> SelectAssemblies()
+        //{
+        //    return new[] {Assembly.GetExecutingAssembly()};
+        //}
 
         protected override object GetInstance(Type serviceType, string key)
         {

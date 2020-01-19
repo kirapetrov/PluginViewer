@@ -3,6 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="PluginViewer" Height="450" Width="800">
     <Grid>
-        <TextBlock Text="Hello world" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ContentControl Grid.Column="1" x:Name="ActiveItem" />
     </Grid>
 </Window>
