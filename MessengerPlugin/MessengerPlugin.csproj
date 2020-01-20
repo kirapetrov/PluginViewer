@@ -67,4 +67,8 @@
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if not exist $(SolutionDir)\PluginViewer\$(OutDir)\Plugins mkdir $(SolutionDir)\PluginViewer\$(OutDir)\Plugins
+copy /Y $(TargetPath) $(SolutionDir)\PluginViewer\$(OutDir)\Plugins</PostBuildEvent>
+  </PropertyGroup>
 </Project>
