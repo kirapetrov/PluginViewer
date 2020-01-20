@@ -5,7 +5,7 @@ using System.ComponentModel.Composition;
 
 namespace ImageViewerPlugin.ViewModels
 {
-    [Export(typeof(IPluginViewModel))]
+    [Export]
     public class ImageViewerViewModel : Screen, IPluginViewModel
     {
         private ImageInfo imageInfo;
@@ -38,9 +38,9 @@ namespace ImageViewerPlugin.ViewModels
 
             imageInfo = new ImageInfo
             {
-                Location = @"/Resources/OIP.jpg",
-                Width = 500,
-                Height = 500
+                Location = @"/ImageViewerPlugin;component/Resources/OIP.jpg",
+                Width = 800,
+                Height = 600
             };
         }
     }

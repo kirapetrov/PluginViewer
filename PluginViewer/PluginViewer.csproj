@@ -109,6 +109,10 @@
       <Project>{93263e2c-3d77-4225-95b0-47bc91a1cd1f}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ImageViewerPlugin\ImageViewerPlugin.csproj">
+      <Project>{1d358caa-fb04-4a24-b723-019225cdee5b}</Project>
+      <Name>ImageViewerPlugin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MessengerPlugin\MessengerPlugin.csproj">
       <Project>{c9cb6ec6-9453-48c0-9701-bb4658be0833}</Project>
       <Name>MessengerPlugin</Name>

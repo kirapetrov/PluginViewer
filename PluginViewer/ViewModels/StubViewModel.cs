@@ -4,7 +4,7 @@ using Common;
 
 namespace PluginViewer.ViewModels
 {
-    //[Export(typeof(IPluginViewModel))]
+    [Export]
     public class StubViewModel : PropertyChangedBase, IPluginViewModel
     {
     }

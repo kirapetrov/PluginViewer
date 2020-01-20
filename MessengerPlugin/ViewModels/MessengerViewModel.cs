@@ -5,7 +5,7 @@ using Common;
 
 namespace MessengerPlugin.ViewModels
 {
-    //[Export(typeof(IPluginViewModel))]
+    [Export]
     public class MessengerViewModel : Screen, IPluginViewModel
     {
         private string inputText;
