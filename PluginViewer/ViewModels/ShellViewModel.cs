@@ -23,14 +23,30 @@ namespace PluginViewer.ViewModels
 
             Plugins = new ObservableCollection<PluginNavigationItem>(navigationItems);
             foreach (var plugin in Plugins)
-                plugin.ActivateAction = ActivateItem;
+                plugin.ActivateAction = ActivatePlugin;
         }
 
         protected override void OnInitialize()
         {
             base.OnInitialize();
-            var activeItem = Plugins.Any() ? Plugins.First().MainViewModel : stub;
-            ActivateItem(activeItem);
+
+            if (Plugins.Any())
+                Plugins.First().Activate();
+            else
+                ActivateItem(stub);
+        }
+
+        private void ActivatePlugin(IPluginViewModel pluginViewModel)
+        {
+            DeactivatePlugin();
+            ActivateItem(pluginViewModel);
+        }
+
+        private void DeactivatePlugin()
+        {
+            var activated = Plugins.FirstOrDefault(x => x.MainViewModel == ActiveItem);
+            if (activated != null)
+                activated.IsActivated = false;
         }
     }
 }
