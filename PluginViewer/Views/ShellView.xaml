@@ -5,6 +5,9 @@
         Title="PluginViewer" Height="450" Width="800">
 
     <Window.Resources>
+        <!--Данный стиль хорошо бы вынести в отдельную сборку, которая отвечала бы за стили. 
+            После чего в месте использования указать что это динамический ресурс.
+            Данная задача не ставилась перед тестовым приложением -->
         <Style TargetType="ToggleButton" x:Key="NavigationButtonStyle">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />

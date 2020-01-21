@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.ReflectionModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -11,10 +12,14 @@ using PluginViewer.ViewModels;
 
 namespace PluginViewer
 {
+    /// В данном классе, за основу была взята предлагаемая в документации реализация (https://caliburnmicro.com/documentation/bootstrapper)
+    /// Я расширил её для загрузки плагинов
     public class PluginViewerBootstrapper : BootstrapperBase
     {
         private List<Assembly> priorityAssemblies;
         private CompositionContainer container;
+
+        public const string PluginFolderName = "Plugins";
 
         public PluginViewerBootstrapper()
         {
@@ -29,11 +34,7 @@ namespace PluginViewer
                     .Select(part => ReflectionModelServices.GetPartType(part).Value.Assembly)
                     .Where(assembly => !AssemblySource.Instance.Contains(assembly)));
 
-            directoryCatalog = new DirectoryCatalog(@"./Plugins/");
-            AssemblySource.Instance.AddRange(
-                directoryCatalog.Parts
-                    .Select(part => ReflectionModelServices.GetPartType(part).Value.Assembly)
-                    .Where(assembly => !AssemblySource.Instance.Contains(assembly)));
+            LoadPlugins();
 
             priorityAssemblies = SelectAssemblies().ToList();
             var priorityCatalog = new AggregateCatalog(priorityAssemblies.Select(x => new AssemblyCatalog(x)));
@@ -45,17 +46,30 @@ namespace PluginViewer
                     .Select(x => new AssemblyCatalog(x)));
 
             var mainProvider = new CatalogExportProvider(mainCatalog);
-
             container = new CompositionContainer(priorityProvider, mainProvider);
             priorityProvider.SourceProvider = container;
             mainProvider.SourceProvider = container;
-
             var batch = new CompositionBatch();
-
             BindServices(batch);
             batch.AddExportedValue(mainCatalog);
-
             container.Compose(batch);
+        }
+
+        private void LoadPlugins()
+        {
+            var executionPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if(string.IsNullOrWhiteSpace(executionPath))
+                return;
+
+            var pathToPlugins = Path.Combine(executionPath, PluginFolderName);
+            if (!Directory.Exists(pathToPlugins)) 
+                return;
+
+            var directoryCatalog = new DirectoryCatalog($".//{PluginFolderName}//");
+            AssemblySource.Instance.AddRange(
+                directoryCatalog.Parts
+                    .Select(part => ReflectionModelServices.GetPartType(part).Value.Assembly)
+                    .Where(assembly => !AssemblySource.Instance.Contains(assembly)));
         }
 
         protected virtual void BindServices(CompositionBatch batch)
