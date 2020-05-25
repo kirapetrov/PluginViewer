@@ -12,14 +12,19 @@ namespace PluginViewer.ViewModels
     {
         private readonly StubViewModel stub;
 
+        public ButtonWithDropDownViewModel ButtonWithDropDown { get; }
+
         public ObservableCollection<PluginNavigationItem> Plugins { get; }
 
         [ImportingConstructor]
         public ShellViewModel(
             [Import] StubViewModel stub,
+            [Import] ButtonWithDropDownViewModel buttonWithDropDown,
             [ImportMany] IEnumerable<PluginNavigationItem> navigationItems)
         {
             this.stub = stub;
+
+            ButtonWithDropDown = buttonWithDropDown;
 
             Plugins = new ObservableCollection<PluginNavigationItem>(navigationItems);
             foreach (var plugin in Plugins)

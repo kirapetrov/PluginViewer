@@ -68,8 +68,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PluginViewerBootstrapper.cs" />
+    <Compile Include="ViewModels\ButtonWithDropDownViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\StubViewModel.cs" />
+    <Compile Include="Views\ButtonWithDropDownView.xaml.cs">
+      <DependentUpon>ButtonWithDropDownView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
@@ -111,6 +115,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ButtonWithDropDownView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ShellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
