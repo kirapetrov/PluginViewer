@@ -60,7 +60,15 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <ContentControl Grid.Column="1" cal:View.Model="{Binding ButtonWithDropDown}" />
+        <StackPanel Grid.Column="1">
+
+            <Button x:Name="StartProcess" Content="Start!!!" />
+
+            <ContentControl Margin="0,10,0,0" cal:View.Model="{Binding ButtonWithDropDown}" />
+
+        </StackPanel>
+
+        
 
         <ContentControl Grid.Column="2" x:Name="ActiveItem" />
     </Grid>

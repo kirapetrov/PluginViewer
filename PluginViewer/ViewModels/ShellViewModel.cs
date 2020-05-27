@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 using Common;
 
@@ -53,5 +57,63 @@ namespace PluginViewer.ViewModels
             if (activated != null)
                 activated.IsActivated = false;
         }
+
+        #region MyRegion
+
+
+        public ConcurrentStack<int> IntegerValues = new ConcurrentStack<int>();
+
+        public int Counter = 1;
+
+        public Task Worker;
+
+        public CancellationTokenSource CancellationTokenSource;
+
+        public void StartProcess()
+        {
+            IntegerValues.Push(Counter);
+            Counter++;
+
+            CancellationTokenSource?.Cancel();
+            if (Worker?.Status == TaskStatus.Running)
+            {
+                Console.WriteLine("Running");
+                return;
+            }
+
+            Worker = Task.Run(SomeWork);
+        }
+
+        private async void SomeWork()
+        {
+            Console.WriteLine("Start");
+            CancellationTokenSource = new CancellationTokenSource();
+            IntegerValues.TryPop(out var result);
+            IntegerValues.Clear();
+            await IntegerHandler(result, CancellationTokenSource.Token);
+            var isCanceled = CancellationTokenSource.IsCancellationRequested;
+            CancellationTokenSource.Dispose();
+            CancellationTokenSource = null;
+            if (!isCanceled)
+            {
+                Console.WriteLine("Yeah");
+                return;
+            }
+
+            SomeWork();
+        }
+
+        private Task IntegerHandler(int value, CancellationToken token)
+        {
+            Console.WriteLine($"Integer is {value}");
+            Thread.Sleep(3000);
+            Console.WriteLine("After sleep");
+            Console.WriteLine(token.IsCancellationRequested);
+            return Task.CompletedTask;
+        }
+
+        #endregion
+
+
     }
 }
